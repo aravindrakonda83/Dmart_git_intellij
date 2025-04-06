@@ -6,6 +6,9 @@
 <head>
     <title>DMart Ready - Products</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+    <!-- Bootstrap Icons -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -147,27 +150,57 @@
 </head>
 <body>
 
-<!-- 🔹 Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-    <div class="container">
-        <a class="navbar-brand" href="#">DMart Ready</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Categories</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Offers</a></li>
-                <li class="nav-item"><a class="nav-link" href="cart"><i class="bi bi-cart3"></i> Cart</a></li>
-                <li class="nav-item"><a class="nav-link" href="order-history"><i class="bi bi-box-seam"></i> Order History</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Login / Register</a></li>
-            </ul>
+<!-- Navbar matching DMart Ready look -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-2 fixed-top">
+    <div class="container-fluid px-4">
+
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <span class="fw-bold text-success fs-5">DMart</span><span class="text-danger fw-semibold">ready</span>
+        </a>
+
+        <!-- Location and Delivery Info -->
+        <div class="d-flex align-items-center ms-3 me-auto">
+            <i class="bi bi-geo-alt-fill text-success me-1"></i>
+            <div>
+                <div class="fw-semibold">500074 <span class="text-muted"></span></div>
+                <small class="text-muted">Hyderabad</small>
+            </div>
+            <div class="ms-4 small">
+                <span class="text-muted">Earliest</span> <span class="text-success fw-semibold">Home Delivery</span> available<br>
+                <i class="bi bi-brightness-alt-low-fill text-warning me-1"></i><span class="text-dark fw-semibold">Today 07:00 PM - 10:00 PM</span>
+            </div>
         </div>
+
+        <!-- 🔍 Centered Search Bar -->
+        <div class="mx-auto w-50">
+            <form class="d-flex" action="dashboard" method="get">
+                <input class="form-control me-2" type="search" name="search" placeholder="Search for products"
+                       value="${param.search}" aria-label="Search">
+                <button class="btn btn-success" type="submit">SEARCH</button>
+            </form>
+        </div>
+
+        <!-- Icons on the Right -->
+		<div class="d-flex align-items-center ms-3">
+
+		    <!-- Green Cart Icon -->
+		    <a href="cart" class="text-decoration-none position-relative me-3">
+		        <i class="bi bi-cart3 text-success fs-4"></i>
+		    </a>
+
+		    <!-- 🧾 Order History Icon -->
+		    <a href="order-history" class="text-decoration-none position-relative">
+		        <i class="bi bi-receipt-cutoff text-primary fs-4"></i>
+		    </a>
+
+		</div>
+
     </div>
 </nav>
 
-<!-- 🔄 Sidebar + Products Layout -->
+
+<!-- ð Sidebar + Products Layout -->
 <div class="container-fluid mt-4">
     <div class="row">
 
@@ -176,60 +209,83 @@
             <button class="btn btn-outline-success" id="toggleCategory">Show Categories</button>
         </div>
 
+        <div class="container mt-4">
+    	<div class="row">
         <!-- Sidebar -->
-        <div class="col-md-3 mb-4" id="categorySidebar">
-            <div class="list-group shadow-sm">
-                <c:forEach var="cat" items="${['All', 'Fruits', 'Vegetables', 'Beverages', 'Snacks', 'Household']}">
-                    <a href="products?category=${cat}"
-                       class="list-group-item list-group-item-action
-                       <c:if test='${param.category == cat || (cat == "All" && empty param.category)}'>active</c:if>'">
-                        ${cat}
-                    </a>
-                </c:forEach>
-            </div>
-        </div>
+<div class="col-md-3 mb-4 " id="categorySidebar">
+    <div class="list-group shadow-sm position-fixed" style="top: 80px; max-height: calc(100vh - 100px); overflow-y: auto;">
+    <h3>CATEGORIES: </h3>
+        <c:forEach var="cat" items="${['All', 'Fruits', 'Vegetables', 'Beverages', 'Snacks', 'Household']}">
+            <a href="dashboard?category=${cat}"
+               class="list-group-item list-group-item-action
+               ${selectedCategory == cat ? 'active' : ''}">
+                ${cat}
+            </a>
+        </c:forEach>
+    </div>
+</div>
+
 
         <!-- Products Grid -->
-        <div class="col-md-9">
-            <h4 class="text-center mb-4">
-                <i class="bi bi-box2-heart"></i>
+<div class="col-md-9 mt-5 pt-3">
+    <h4 class="text-center mb-4">
+        <i class="bi bi-box2-heart"></i>
+        <c:choose>
+            <c:when test="${not empty param.search}">
+                Search Results for "<strong>${param.search}</strong>"
+            </c:when>
+            <c:otherwise>
                 <c:out value="${param.category != null ? param.category : 'All'}" /> Products
-            </h4>
-            <div class="row g-4">
-                <c:forEach var="product" items="${products}">
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        <div class="card product-card h-100 shadow-sm">
-                            <img src="${product.imageUrl}" alt="${product.name}" class="card-img-top">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="product-title">${product.name}</h5>
-                                <div class="product-category mb-1">${product.category}</div>
+            </c:otherwise>
+        </c:choose>
+    </h4>
 
-                                <div class="mb-2">
-                                    <span class="price">&#8377;${product.price}</span>
-                                    <span class="mrp">&#8377;${product.mrp}</span>
-                                    <c:set var="discount" value="${((product.mrp - product.price) * 100) / product.mrp}" />
-                                    <span class="badge bg-success ms-2">
-                                        <fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% Off
-                                    </span>
-                                </div>
+    <!-- No Products Alert -->
+    <c:if test="${empty products}">
+        <div class="alert alert-warning text-center w-100" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            No products found matching "<strong>${param.search}</strong>".
+        </div>
+    </c:if>
 
-                                <form action="add-to-cart" method="post" class="mt-auto">
-                                    <input type="hidden" name="productId" value="${product.id}" />
-                                    <div class="mb-2">
-                                        <label for="unit-${product.id}" class="unit-label">Select Unit:</label>
-                                        <select name="unit" class="form-select form-select-sm" id="unit-${product.id}">
-                                            <c:forEach var="unit" items="${fn:split(product.unitOptions, ',')}">
-                                                <option value="${unit}">${unit}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-add w-100">Add to Cart</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
+	    <!-- Product Cards -->
+	    <div class="row g-4">
+	        <c:forEach var="product" items="${products}">
+	            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+	                <div class="card product-card h-100 shadow-sm">
+	                    <img src="${product.imageUrl}" alt="${product.name}" class="card-img-top">
+	                    <div class="card-body d-flex flex-column">
+	                        <h5 class="product-title">${product.name}</h5>
+	                        <div class="product-category mb-1">${product.category}</div>
+
+	                        <div class="mb-2">
+	                            <span class="price">&#8377;${product.price}</span>
+	                            <span class="mrp">&#8377;${product.mrp}</span>
+	                            <c:set var="discount" value="${((product.mrp - product.price) * 100) / product.mrp}" />
+	                            <span class="badge bg-success ms-2">
+	                                <fmt:formatNumber value="${discount}" maxFractionDigits="0"/>% Off
+	                            </span>
+	                        </div>
+
+	                        <form action="add-to-cart" method="post" class="mt-auto">
+	                            <input type="hidden" name="productId" value="${product.id}" />
+	                            <div class="mb-2">
+	                                <label for="unit-${product.id}" class="unit-label">Select Unit:</label>
+	                                <select name="unit" class="form-select form-select-sm" id="unit-${product.id}">
+	                                    <c:forEach var="unit" items="${fn:split(product.unitOptions, ',')}">
+	                                        <option value="${unit}">${unit}</option>
+	                                    </c:forEach>
+	                                </select>
+	                            </div>
+	                            <button type="submit" class="btn btn-add w-100">Add to Cart</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </c:forEach>
+	    </div>
+	</div>
+
         </div>
     </div>
 </div>
@@ -237,11 +293,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Mobile category toggle
-    document.getElementById("toggleCategory").addEventListener("click", function () {
+    /* document.getElementById("toggleCategory").addEventListener("click", function () {
         const sidebar = document.getElementById("categorySidebar");
         sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
         this.textContent = sidebar.style.display === "none" ? "Show Categories" : "Hide Categories";
-    });
+    }); */
 </script>
 </body>
 </html>

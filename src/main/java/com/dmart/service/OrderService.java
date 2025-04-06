@@ -11,7 +11,9 @@ public interface OrderService {
     void placeOrder(User user, Map<Integer, CartItem> cart);
     List<Order> getOrderHistory(int userId);
 
-    List<Order> getOrderHistory(int userId, String search, int page, int pageSize);
-    boolean hasNextPage(int userId, String search, int page, int pageSize);
+    List<Order> getOrderHistory(int userId, String search, String status, String date, int page, int pageSize);
+    boolean hasNextPage(int userId, String search, String status, String date, int page, int pageSize);
+    Order getOrderById(int orderId);
+
 
 }
