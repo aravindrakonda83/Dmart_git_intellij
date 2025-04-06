@@ -27,4 +27,15 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductsByCategory(String category) {
         return productDAO.getProductsByCategory(category);
     }
+
+    @Override
+    public void addProduct(Product product) {
+        productDAO.save(product);
+    }
+
+    @Override
+    public void deleteProduct(int id) {
+        productDAO.deleteById(id);
+    }
+
 }

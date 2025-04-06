@@ -52,9 +52,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrderHistory(int userId, String search, int page, int pageSize) {
+    public List<Order> getOrderHistory(int userId, String search, String status, String date, int page, int pageSize) {
         int offset = (page - 1) * pageSize;
-        List<Order> orders = orderDAO.getUserOrdersWithFilter(userId, search, offset, pageSize);
+        List<Order> orders = orderDAO.getUserOrdersWithFilters(userId, search, status, date, offset, pageSize);
         for (Order order : orders) {
             order.setItems(orderDAO.findItemsByOrderId(order.getId()));
         }
@@ -62,8 +62,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean hasNextPage(int userId, String search, int page, int pageSize) {
+    public boolean hasNextPage(int userId, String search, String status, String date, int page, int pageSize) {
         int offset = page * pageSize;
-        return orderDAO.getUserOrdersWithFilter(userId, search, offset, pageSize).size() > 0;
+        return orderDAO.getUserOrdersWithFilters(userId, search, status, date, offset, pageSize).size() > 0;
     }
+    @Override
+    public Order getOrderById(int orderId) {
+        Order order = orderDAO.findOrderById(orderId);
+        if (order != null) {
+            order.setItems(orderDAO.findItemsByOrderId(orderId));
+        }
+        return order;
+    }
+
+
 }

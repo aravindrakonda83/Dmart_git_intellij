@@ -32,7 +32,7 @@
                 </c:forEach>
                 <tr>
                     <td colspan="3" class="text-end"><strong>Grand Total:</strong></td>
-                    <td><strong>₹${grandTotal}</strong></td>
+                    <td><strong>&#8377;${grandTotal}</strong></td>
                 </tr>
                 </tbody>
             </table>

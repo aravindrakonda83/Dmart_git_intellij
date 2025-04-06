@@ -59,6 +59,7 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+
     // Getters and Setters
     // (Generate using IDE or Lombok for brevity)
 }

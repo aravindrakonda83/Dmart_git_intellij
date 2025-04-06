@@ -9,7 +9,9 @@ public interface OrderDAO {
     int saveOrder(Order order);
     void saveOrderItem(OrderItem item);
     List<Order> findOrdersByUserId(int userId);
-    List<Order> getUserOrdersWithFilter(int userId, String search, int offset, int limit);
-    List<OrderItem> findItemsByOrderId(int orderId);
-}
 
+    List<OrderItem> findItemsByOrderId(int orderId);
+    List<Order> getUserOrdersWithFilters(int userId, String search, String status, String date, int offset, int limit);
+    Order findOrderById(int orderId);
+
+}

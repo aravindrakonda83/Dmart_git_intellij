@@ -16,7 +16,7 @@ public class ProductDAOImpl implements ProductDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private RowMapper<Product> productMapper = new RowMapper<>() {
+    private final RowMapper<Product> productMapper = new RowMapper<>() {
         public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
             Product product = new Product();
             product.setId(rs.getInt("id"));
@@ -41,4 +41,24 @@ public class ProductDAOImpl implements ProductDAO {
         String sql = "SELECT * FROM products WHERE category = ?";
         return jdbcTemplate.query(sql, productMapper, category);
     }
+
+    @Override
+    public void save(Product product) {
+        String sql = "INSERT INTO products (name, category, price, mrp, unit_options, image_url) VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                product.getName(),
+                product.getCategory(),
+                product.getPrice(),
+                product.getMrp(),
+                product.getUnitOptions(),
+                product.getImageUrl()
+        );
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE FROM products WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
 }
